@@ -1,0 +1,205 @@
+body {
+  margin: 0;
+  font-family: "IBM Plex Sans", sans-serif;
+}
+
+header {
+  border-bottom: #97b6be 2px solid;
+  padding: 0;
+  margin: 0;
+}
+
+header img {
+  float: left;
+  height: 60.5px;
+  border-right: #97b6be 1px solid;
+}
+
+.nav {
+  height: 60px;
+  text-align: center;
+}
+
+.ul-nav {
+  margin: 0;
+  padding: 0;
+  display: flex;
+}
+
+.li-nav {
+  list-style: none;
+  height: 60.5px;
+  flex-basis: auto;
+  flex-grow: 1;
+  background: url("images/nav \li.jpg") no-repeat center;
+  background-size: 420px 60px;
+}
+
+.li-nav:hover {
+  background: url("images/hovernavli1.jpg") no-repeat center;
+  background-size: 420px 60px;
+  cursor: pointer;
+}
+
+.a-nav {
+  text-decoration: none;
+  color: #1f374e;
+  font-weight: bold;
+  font-size: 27px;
+  padding: 10px 20px;
+  display: inline-block;
+  white-space: nowrap;
+}
+
+.rel {
+  position: relative;
+}
+
+.abs {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+}
+/* background-color: #ebfff7; */
+/* background-color: #e3f0f3; */
+.container {
+  background: linear-gradient(to right, #e3f0f3, #cbecde);
+  margin: 0;
+  padding: 25px 50px;
+}
+
+.container select {
+  height: 45px;
+  box-sizing: border-box;
+  width: 416px;
+  font-size: 15px;
+  padding: 5px;
+}
+
+.chooseCountries {
+  padding-bottom: 15px;
+}
+
+.ok-country-btn {
+  background-color: #cae6ec;
+  border: 1px solid #111;
+  border-radius: 2px;
+  cursor: pointer;
+  height: 45px;
+  box-sizing: border-box;
+  font-weight: 600;
+  margin-left: 2px;
+}
+
+.ok-dates-btn {
+  background-color: #c0edde;
+  height: 30px;
+  border: 1px solid #111;
+  border-radius: 2px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-left: 5px;
+}
+
+.ok-country-btn:hover {
+  background-color: #c5dde2;
+}
+
+.ok-dates-btn:hover {
+  background-color: #b9e0d3;
+}
+
+.blue-coloured {
+  color: #3f6990;
+}
+
+.red-coloured {
+  color: #fd8e73;
+}
+
+#general-section {
+  background-color: #dbf0f5;
+}
+
+.placeholder-after-selectors {
+  border-left: #97b6be 2.5px solid;
+  padding-left: 5px;
+}
+
+#map-section {
+  padding-top: 3px;
+}
+
+#mapid {
+  height: 60px;
+  margin-bottom: 25px;
+}
+
+#departure-date,
+#return-date {
+  margin-left: 5px;
+  height: 29px;
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+  font-weight: bold;
+}
+
+/* table {
+  margin-top: 25px;
+} */
+
+table,
+th,
+td {
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+th,
+td {
+  padding: 10px 17px 10px 17px;
+}
+
+#currency-tickets {
+  margin-left: 10px;
+  height: 30px;
+  font-family: "IBM Plex Sans", "Arial", sans-serif;
+  font-weight: bold;
+}
+
+#price-section {
+  padding-top: 5px;
+  border-top: #97b6be 1px solid;
+  margin-bottom: 40px;
+}
+
+.form-btn-dates {
+  display: flex;
+  justify-content: left;
+}
+
+.congrats {
+  padding-bottom: 10px;
+}
+
+.warning {
+  font-weight: 100;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+}
+
+.group:before,
+.group:after {
+  content: "";
+  display: table;
+}
+
+.group:after {
+  clear: both;
+}
+
+.group {
+  zoom: 1;
+}
