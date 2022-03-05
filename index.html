@@ -12,12 +12,9 @@
     />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-      integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-      crossorigin=""
-    />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin=""/>
     <title>Easy Travel</title>
   </head>
   <body>
@@ -39,7 +36,7 @@
     </header>
     <div class="container">
       <div class="chooseCountries">
-        <h2>Добрый день! 🌞</h2>
+        <h1>Добрый день! 🌞</h1>
         <h3>В какой стране вы сейчас находитесь?</h3>
         <select name="country-origin" class="form-control" id="country-origin">
           <option value="0" label="Select a country ... " selected="selected">
@@ -705,11 +702,11 @@
           </h3>
           <form>
             <label for="departure"><b>Дата отправления (туда):</b></label>
-            <input type="date" id="departure-date" value="2021-09-01" />
+            <input type="date" id="departure-date" value="2022-06-01" />
           </form>
           <form>
             <label for="return"><b>Дата возвращения (обратно):</b></label>
-            <input type="date" id="return-date" value="2021-09-01" />
+            <input type="date" id="return-date" value="2022-06-07" />
           </form>
           <form class="form-btn-dates">
             <label for="currency-tickets"
@@ -720,14 +717,12 @@
             <button class="ok-dates-btn">Готово ✅</button>
           </form>
         </div>
-        <div class="tickets-output"></div>
+        <div class="tickets-output hidden"></div>
       </div>
     </div>
-    <script src="script.js"></script>
-    <script
-      src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-      integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-      crossorigin=""
-    ></script>
+    <script src="script.js" type="module" defer></script>
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
   </body>
 </html>

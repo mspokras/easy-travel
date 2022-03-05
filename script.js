@@ -1,3 +1,4 @@
+
 //Выбор страны
 const btnOkCountry = document.querySelector(".ok-country-btn");
 const btnReadyFlights = document.querySelector(".ok-dates-btn");
@@ -35,6 +36,7 @@ btnOkCountry.addEventListener("click", function (e) {
   placeholderAfterSelectors.innerHTML = "";
   mapAlert.innerHTML = "";
   if (map) map.remove();
+  ticketsOutput.classList.add("hidden");
 
   //Возможные опечатки/ошибки: повторяющаяся страна или falsy value
   const htmlSameCountry = `<h2>Вы выбрали путешествие в пределах одной страны, а мы специализируемся на данных о зарубежных поездках 🙁🛫 </h2>`;
@@ -44,12 +46,13 @@ btnOkCountry.addEventListener("click", function (e) {
     return;
   }
 
+
   //Вставить картинку с флагами и самолётом
   const htmlFlagsPlane = `<h2>Отличный выбор! Ниже вы найдёте информацию о стране прибытия 😀</h2>
   <div class="flags" style="position:relative">
-  <img src="https://www.countryflags.io/${countryOrigin.value.toLowerCase()}/shiny/48.png" style="position:absolute;top:0px;" />
-  <img src="images/planefinal.png" style="height:300px;margin-left:55px;" />
-  <img src="https://www.countryflags.io/${countryDestination.value.toLowerCase()}/shiny/48.png" style="margin-top:20px" />
+  <img src="https://countryflagsapi.com/svg/${countryOrigin.value.toLowerCase()}" style="position:absolute; top:0px; height:40px; width:60px" />
+  <img src="images/planefinal.png" style="height:300px;margin-left:60px;" />
+  <img src="https://countryflagsapi.com/svg/${countryDestination.value.toLowerCase()}" style="margin-top:20px; height:40px; width:60px" />
   <style>
   #general-section {
     padding: 15px 30px;
@@ -79,34 +82,33 @@ btnOkCountry.addEventListener("click", function (e) {
   (async function () {
     try {
       let res = await fetch(
-        `https://restcountries.eu/rest/v2/alpha/${countryOrigin.value.toLowerCase()}`
+        `https://restcountries.com/v3.1/alpha/${countryOrigin.value.toLowerCase()}`
       );
       if (!res.ok) throw new Error(`Country not found (${res.status})`);
       let resp = await res.json();
-      console.log(resp);
-      const latlng1 = await resp.latlng;
+      const latlng1 = await resp[0].latlng;
       coordsArray.push(latlng1);
-      let timezone = await resp.timezones[0];
+      let timezone = await resp[0].timezones;
       if (timezone[4] !== "0") {
-        timezone1 = timezone.slice(4, 6);
+        timezone1 = timezone[0].slice(4, 6);
       } else {
-        timezone1 = timezone.slice(5, 6);
+        timezone1 = timezone[0].slice(5, 6);
       }
       if (timezone[3] === "-") timezone1 = "-" + timezone1;
       if (countryOrigin.value === "DK") timezone1 = 1;
 
       res = await fetch(
-        `https://restcountries.eu/rest/v2/alpha/${countryDestination.value.toLowerCase()}`
+        `https://restcountries.com/v3.1/alpha/${countryDestination.value.toLowerCase()}`
       );
       if (!res.ok) throw new Error(`Country not found (${res.status})`);
       resp = await res.json();
-      const latlng2 = await resp.latlng;
+      const latlng2 = await resp[0].latlng;
       coordsArray.push(latlng2);
-      timezone = await resp.timezones[0];
+      timezone = await resp[0].timezones;
       if (timezone[4] !== "0") {
-        timezone2 = timezone.slice(4, 6);
+        timezone2 = timezone[0].slice(4, 6);
       } else {
-        timezone2 = timezone.slice(5, 6);
+        timezone2 = timezone[0].slice(5, 6);
       }
       if (timezone[3] === "-") timezone2 = "-" + timezone2;
       if (countryDestination.value === "DK") timezone2 = 1;
@@ -148,7 +150,43 @@ btnOkCountry.addEventListener("click", function (e) {
     const htmlFlightTime = `<h3>🕒 В среднем, прямой перелёт между двумя странами займёт приблизительно <span class="blue-coloured">${hrsMinsTime}</span></h3>`;
     placeholderAfterSelectors.insertAdjacentHTML("beforeend", htmlFlightTime);
 
-    //Отобразить карту
+  //Назвать национальную валюту страны, площадь, население и граничащие страны.
+  let currencyDestination;
+  let areaDestination;
+  let populationDestination;
+  let capital;
+  (async function () {
+    try {
+      let res = await fetch(
+        `https://restcountries.com/v2/alpha/${countryDestination.value.toLowerCase()}`
+      );
+      if (!res.ok) throw new Error(`Country not found (${res.status})`);
+      let resp = await res.json();
+      currencyDestination = await resp.currencies[0].name;
+      areaDestination = await resp.area;
+      populationDestination = await resp.population;
+      capital = await resp.capital;
+    } catch (err) {
+      console.error(err.message);
+    }
+
+    //Назвать столицу страны
+    const htmlCapital = `<h3>🌆 Столица страны прибытия - <span class="blue-coloured">${capital}</span>.</h3>`;
+    placeholderAfterSelectors.insertAdjacentHTML("beforeend", htmlCapital);
+    //Назвать площадь и население страны приезда
+    const htmlAreaPopulation = `<h3>🗾 Площадь - <span class="blue-coloured">${areaDestination} км²</span>.</h3>
+    <h3>👫 Население - <span class="blue-coloured">${populationDestination} чел</span>.</h3>`;
+    placeholderAfterSelectors.insertAdjacentHTML(
+      "beforeend",
+      htmlAreaPopulation
+    );
+    //Назвать валюту
+    const htmlCurrency = `<h3>💵 Национальная валюта - <span class="blue-coloured">${currencyDestination}</span>.</h3>`;
+    placeholderAfterSelectors.insertAdjacentHTML("beforeend", htmlCurrency);
+  })();
+
+  //////КАРТА////////////////////////////
+  //Отобразить карту
     map = L.map("mapid").setView(coordsArray[0], 13);
 
     /*L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -228,40 +266,7 @@ btnOkCountry.addEventListener("click", function (e) {
     mapAlert.insertAdjacentHTML("beforeend", htmlThisIsMap);
   })();
 
-  //Назвать национальную валюту страны, площадь, население и граничащие страны.
-  let currencyDestination;
-  let areaDestination;
-  let populationDestination;
-  let capital;
-  (async function () {
-    try {
-      let res = await fetch(
-        `https://restcountries.eu/rest/v2/alpha/${countryDestination.value.toLowerCase()}`
-      );
-      if (!res.ok) throw new Error(`Country not found (${res.status})`);
-      let resp = await res.json();
-      currencyDestination = await resp.currencies[0].name;
-      areaDestination = await resp.area;
-      populationDestination = await resp.population;
-      capital = await resp.capital;
-    } catch (err) {
-      console.error(err.message);
-    }
-
-    //Назвать столицу страны
-    const htmlCapital = `<h3>🌆 Столица страны прибытия - <span class="blue-coloured">${capital}</span>.</h3>`;
-    placeholderAfterSelectors.insertAdjacentHTML("beforeend", htmlCapital);
-    //Назвать площадь и население страны приезда
-    const htmlAreaPopulation = `<h3>🗾 Площадь - <span class="blue-coloured">${areaDestination} км²</span>.</h3>
-    <h3>👫 Население - <span class="blue-coloured">${populationDestination} чел</span>.</h3>`;
-    placeholderAfterSelectors.insertAdjacentHTML(
-      "beforeend",
-      htmlAreaPopulation
-    );
-    //Назвать валюту
-    const htmlCurrency = `<h3>💵 Национальная валюта - <span class="blue-coloured">${currencyDestination}</span>.</h3>`;
-    placeholderAfterSelectors.insertAdjacentHTML("beforeend", htmlCurrency);
-  })();
+  //////АВИАБИЛЕТЫ////////////////////////////////
 
   //Создать input
   flightsPrices.classList.remove("hidden");
@@ -278,13 +283,65 @@ btnOkCountry.addEventListener("click", function (e) {
     ticketsOutput.innerHTML = "";
     //Показать цену за непрямые и прямые рейсы
     //1-2 - ПРЯМЫЕ, 3-4 - НЕПРЯМЫЕ РЕЙСЫ
-    let priceFlights = ["", "", "", ""];
-    let cityOrigins = ["", "", "", ""];
-    let cityDestinations = ["", "", "", ""];
-    let carriersFrom = ["", "", "", ""];
-    let carriersTo = ["", "", "", ""];
+    let priceFlights = ["237", "291", "128", "147"];
+    let cityOrigins = ["City1", "City2", "City3", "City4"];
+    let cityDestinations = ["City5", "City6", "City7", "City8"];
+    let carriersFrom = ["Wizz Air", "Ryanair", "Ryanair", "Lufthansa"];
+    let carriersTo = ["Ryanair", "Wizz Air", "Wizz Air", "Ryanair"];
+    
+    ticketsOutput.classList.remove("hidden");
+    const htmlTickets = `<h3 class="congrats">😀 Мы нашли для вас следующие варианты перелётов:</h3>
+    <table>
+      <tr>
+        <th style="width=170px">Прямой перелёт/с пересадкой</th>
+        <th style="width=170px">Цена в ${
+          inputCurrency.value
+        } в обе стороны</th>
+        <th>Город отправления</th>
+        <th>Город прибытия</th>
+        <th style="width=170px">Авиакомпания (перелёт "туда")</th>
+        <th style="width=170px">Авиакомпания (перелёт "обратно")</th>
+      </tr>
+      <tr>
+        <td style="text-align: center;" rowspan="2"><img src="images/directflight.jpg" alt="Прямой" width="150px" /></td>
+        <td><b>${
+          priceFlights[0] ? priceFlights[0] : "Нет прямых рейсов"
+        }</b></td>
+        <td>${priceFlights[0] ? cityOrigins[0] : "-"}</td>
+        <td>${priceFlights[0] ? cityDestinations[0] : "-"}</td>
+        <td>${priceFlights[0] ? carriersFrom[0] : "-"}</td>
+        <td>${priceFlights[0] ? carriersTo[0] : "-"}</td>
+      </tr>
+      <tr>
+        <td><b>${priceFlights[1] ? priceFlights[1] : "-"}</b></td>
+        <td>${priceFlights[1] ? cityOrigins[1] : "-"}</td>
+        <td>${priceFlights[1] ? cityDestinations[1] : "-"}</td>
+        <td>${priceFlights[1] ? carriersFrom[1] : "-"}</td>
+        <td>${priceFlights[1] ? carriersTo[1] : "-"}</td>
+      </tr>
+      <tr>
+        <td rowspan="2" style="text-align: center;"><img src="images/connectingflight.jpg" alt="С пересадкой" width="150px" /></td>
+        <td><b>${
+          priceFlights[2] ? priceFlights[2] : "Нет рейсов с пересадкой"
+        }</b></td>
+        <td>${priceFlights[2] ? cityOrigins[2] : "-"}</td>
+        <td>${priceFlights[2] ? cityDestinations[2] : "-"}</td>
+        <td>${priceFlights[2] ? carriersFrom[2] : "-"}</td>
+        <td>${priceFlights[2] ? carriersTo[2] : "-"}</td>
+      </tr>
+      <tr>
+        <td><b>${priceFlights[3] ? priceFlights[3] : "-"}</b></td>
+        <td>${priceFlights[3] ? cityOrigins[3] : "-"}</td>
+        <td>${priceFlights[3] ? cityDestinations[3] : "-"}</td>
+        <td>${priceFlights[3] ? carriersFrom[3] : "-"}</td>
+        <td>${priceFlights[3] ? carriersTo[3] : "-"}</td>
+      </tr>
+      </table>
+      <div class="warning"><h5>К сожалению, Skyscanner API был отключён в конце 2021 года, поэтому настоящие цены временно недоступны. Для реальных результатов рекомендуем воспользоваться веб-сайтом skyscanner.com.ua/</h5></div>`;
+    ticketsOutput.insertAdjacentHTML("beforeend", htmlTickets);
+    flightsPrices.scrollIntoView({ behavior: "smooth" });
 
-    fetch(
+    /*fetch(
       `https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/browseroutes/v1.0/UA/${inputCurrency.value}/en-GB/${countryOrigin.value}/${countryDestination.value}/${inputDepartureDate.value}/${inputReturnDate.value}`,
       {
         method: "GET",
@@ -489,6 +546,8 @@ btnOkCountry.addEventListener("click", function (e) {
       })
       .catch((err) => {
         console.error(err);
-      });
+      });*/
+      
   });
+
 });

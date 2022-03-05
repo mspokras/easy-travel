@@ -203,3 +203,9 @@ td {
 .group {
   zoom: 1;
 }
+
+.tickets-output {
+  border-top: #97b6be 1px solid;
+  background-color: #eaffff;
+  padding: 25px 50px;
+}
